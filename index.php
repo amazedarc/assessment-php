@@ -1,4 +1,12 @@
 <?php
+
+// http://localhost:8080/assessment/index.php/ for starting
+// http://localhost:8080/assessment/index.php/?inp=1 for basic inspection
+// http://localhost:8080/assessment/index.php/?inp=2 for oil change 
+// http://localhost:8080/assessment/index.php/?inp=3 for tire rotation
+// http://localhost:8080/assessment/index.php/?inp=4 for oil * tire rotation
+
+
   header("Access-Control-Allow-Origin: *");
   header("content-type: application/json");
   require ('./basic_inspection.php');
@@ -7,6 +15,7 @@
 
   $services = ['Basic Inspection','OIl change','Tire rotation'];
   $name="";
+  
 
   $basic_inspection = new BasicInspection;
   $tire_rotation = new TireRotation ;
@@ -26,7 +35,6 @@ if(isset($_GET['inp'])){
     }elseif($_GET['inp'] == '2'){
       $response  = array('message'=>' your Oil change bill is: $'.$oil_change->get_price());
     }elseif($_GET['inp'] == '3'){
-      // $name = $_GET['inp'];
       $response  = array('message'=>' your Tire rotation bill is: $'.$tire_rotation->get_price());
     }
     elseif($_GET['inp'] == '4'){
