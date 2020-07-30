@@ -14,16 +14,14 @@
   require ('./tire_rotation.php');
   require ('./oil_change.php');
 
-  $services = ['Basic Inspection','OIl change','Tire rotation'];
-  $name = [];
-  
+  $services = ['Basic Inspection','Oil change','Tire rotation'];
 
-  $basic_inspection = new BasicInspection;
-  $tire_rotation = new TireRotation ;
-  $oil_change = new OilChange;
+  $basic_inspection = new BasicInspection();
+  $tire_rotation = new TireRotation(new BasicInspection()) ;
+  $oil_change = new OilChange(new BasicInspection());
 
   function all_service_cost(){
-    return  (new OilChange)->get_price() + 23.5;
+    return  (new TireRotation(new OilChange(new BasicInspection())))->get_price() ;
   }
 
 if(isset($_GET['inp'])){
