@@ -8,45 +8,36 @@
 // http://localhost:8080/assessment/index.php/?inp=4 for oil * tire rotation
 
 
-  header("Access-Control-Allow-Origin: *");
-  header("content-type: application/json");
-  require ('./basic_inspection.php');
-  require ('./tire_rotation.php');
-  require ('./oil_change.php');
+header("Access-Control-Allow-Origin: *");
+header("content-type: application/json");
 
-  $services = ['Basic Inspection','Oil change','Tire rotation'];
+require('./services.php');
 
-  $basic_inspection = new BasicInspection();
-  $tire_rotation = new TireRotation(new BasicInspection()) ;
-  $oil_change = new OilChange(new BasicInspection());
+$service = new Services();
+$services = $service->get_price();
+$tire_rotation = $services->tire_rotation + $services->basic_inspection;
+$oil_change = $services->oil_change + $services->basic_inspection;
+$tire_oil_service = $oil_change + $services->tire_rotation;
+$array_service = get_object_vars($services);
+$service_name = array_keys($array_service);
 
-  function all_service_cost(){
-    return  (new TireRotation(new OilChange(new BasicInspection())))->get_price() ;
+if (isset($_GET['inp'])) {
+
+  if (isset($_GET['inp']) && preg_match("/^[a-zA-Z]*$/", $_GET['inp'])) {
+    $_SESSION['NAME'] = $_GET['inp'];
+    $response  = array('message' => 'Select a Service .\n1.' . $service_name[0] . '\n2.' . $service_name[1] . '\n3. ' . $service_name[2] . '\n4.All Services\n5.Add another Service');
+  } elseif ($_GET['inp'] == '1') {
+    $response  = array('message' => $_SESSION['NAME'] . ' your Basic Inspection bill is: $ ' . $services->basic_inspection);
+  } elseif ($_GET['inp'] == '2') {
+    $response  = array('message' => $_SESSION['NAME'] . ' your Oil change bill is: $' . $oil_change);
+  } elseif ($_GET['inp'] == '3') {
+    $response  = array('message' => $_SESSION['NAME'] . ' your Tire rotation bill is: $' . $tire_rotation);
+  } elseif ($_GET['inp'] == '4') {
+    // $name = $_GET['inp'];
+    $response  = array('message' => $_SESSION['NAME'] . ' your Tire rotation and Oil change bill is: $' . $tire_oil_service);
   }
+} else {
+  $response  = array('message' => 'Enter the client name');
+}
 
-if(isset($_GET['inp'])){
-  
-  if(isset($_GET['inp']) && preg_match("/^[a-zA-Z]*$/",$_GET['inp'])){
-   $_SESSION['NAME'] = $_GET['inp'];
-    $response  = array('message'=>'Select a Service .\n1.'.$services[0].'\n2.'.$services[1].'\n3. '.$services[2].'\n4.All Services\n5.Add another Service');
-  }
-   elseif($_GET['inp'] == '1'){
-      $response  = array('message'=>$_SESSION['NAME'].' your Basic Inspection bill is: $'.$basic_inspection->get_price());
-    }elseif($_GET['inp'] == '2'){
-      $response  = array('message'=>$_SESSION['NAME'].' your Oil change bill is: $'.$oil_change->get_price());
-    }elseif($_GET['inp'] == '3'){
-      $response  = array('message'=>$_SESSION['NAME'].' your Tire rotation bill is: $'.$tire_rotation->get_price());
-    }
-    elseif($_GET['inp'] == '4'){
-      // $name = $_GET['inp'];
-      $response  = array('message'=>$_SESSION['NAME'].' your Tire rotation and Oil change bill is: $'.all_service_cost());
-    }
-
-  }else{
-      $response  = array('message'=>'Enter the client name');
-     
- 
-  }
-
-
-  echo json_encode($response);
+echo json_encode($response);
