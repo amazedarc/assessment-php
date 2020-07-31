@@ -2,9 +2,9 @@
 
 class Services  implements JsonSerializable
 {
-    public $tire_rotation;
-    public $oil_change;
     public $basic_inspection;
+    public $oil_change;
+    public $tire_rotation;
 
 
     public function jsonSerialize()

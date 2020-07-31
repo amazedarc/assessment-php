@@ -25,7 +25,7 @@ if (isset($_GET['inp'])) {
 
   if (isset($_GET['inp']) && preg_match("/^[a-zA-Z]*$/", $_GET['inp'])) {
     $_SESSION['NAME'] = $_GET['inp'];
-    $response  = array('message' => 'Select a Service .\n1.' . $service_name[0] . '\n2.' . $service_name[1] . '\n3. ' . $service_name[2] . '\n4.All Services\n5.Add another Service');
+    $response  = array('message' => 'Select a Service .\n1.' . $service_name[0] . '\n2.' . $service_name[1] . '\n3. ' . $service_name[2] . '\n4.tire rotation and oil change');
   } elseif ($_GET['inp'] == '1') {
     $response  = array('message' => $_SESSION['NAME'] . ' your Basic Inspection bill is: $ ' . $services->basic_inspection);
   } elseif ($_GET['inp'] == '2') {
